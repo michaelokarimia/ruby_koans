@@ -31,57 +31,46 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 
 def score(dice)
  runningTotal = 0
- runningTotal = tripletCounter(dice)
- runningTotal += fiveCounter(dice)
- runningTotal += oneCounter(dice)
+ runningTotal =+ loopThroughAllDiceNumbers(dice)
  return runningTotal
 end
 
-def oneCounter(dice)
- runningTotal = 0
- oneArray = dice.select{ |one| one == 1}
- oneCount = oneArray.size
- if oneCount > 0
-	 runningTotal =(100 * oneCount)
- end
- return runningTotal
-end
-def fiveCounter(dice)
- runningTotal = 0
- arrayOfFives = dice.select{ |fives| fives == 5}
- fivesCount = arrayOfFives.size
- if fivesCount > 0
-	 runningTotal = (fivesCount * 50)
- end
- return runningTotal
-end
-def tripletCounter(dice)
-	i = 2
-	score = 0
-	tripletCount = dice.select { |triplet| triplet == 1}
-	if tripletCount.size == 3
-		dice.delete(1)
-		return 1000
+def loopThroughAllDiceNumbers dice
+	sum = 0
+	for i in 1..6
+		sum += getPointsOfAnyTriplets(dice,i)
+		sum += getPointsOfSingleFifties(dice,i)
 	end
-	while i < 7
-		tripletCount = dice.select { |triplet| triplet == i}
-		if tripletCount.size >= 3
-			score += (i * 100)
-			# do a loop three times removing elements containing i
-			count = 0
-			while count < 3
-				tripletCount.slice!(tripletCount.index(i))
-				count +=1	
+	return sum
+end
+
+def getPointsOfSingleFifties(dice,i)
+	localsum = 0
+	localSum = dice.inject(0) do |sum, die|
+		if(dice.include?(5))
+			localsum =+ 50
+			dice.pop
+		end
+	end
+	return localsum
+end	
+def getPointsOfAnyTriplets(dice,number)
+	points = 0
+	if(dice.count(number) >= 3)
+		points += dice.inject(0) do |sum, die|
+			if die != 1
+				sum = die * 100 unless die
+			else
+				sum = 1000
 			end
-			dice = tripletCount
+			dice.slice
 		end
-		if tripletCount.size == 3
-			score += (i * 100)
-			dice.delete(i)
-		end
-		i += 1
 	end
-	return score
+	return points
+end
+
+def anyTriplets number
+	return	dice.count(number)
 end
 
 class AboutScoringProject < EdgeCase::Koan
