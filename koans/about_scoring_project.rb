@@ -37,40 +37,45 @@ end
 
 def loopThroughAllDiceNumbers dice
 	sum = 0
-	for i in 1..6
-		sum += getPointsOfAnyTriplets(dice,i)
-		sum += getPointsOfSingleFifties(dice,i)
+	dice.sort
+	for i in 1..6 do
+		if(dice.count(i) >= 3)
+			sum += getPointsOfAnyTriplets(dice,i)
+		end
+		puts dice
+	sum += getPointsForSingles(dice,i)
 	end
 	return sum
 end
 
-def getPointsOfSingleFifties(dice,i)
-	localsum = 0
-	localSum = dice.inject(0) do |sum, die|
-		if(dice.include?(5))
-			localsum =+ 50
-			dice.pop
-		end
+def getPointsForSingles(dice,i)
+	sum = 0
+	localDice = dice
+	if(i == 5 && !localDice.index(i).nil?)
+		puts localDice
+		localDice.pop(localDice.index(i))
+		sum += 50
 	end
-	return localsum
+	if(i == 1 && !localDice.index(i).nil?)
+		puts localDice
+		localDice.pop(localDice.index(i))
+		sum += 100
+	end
+	dice = localDice
+	return sum
 end	
-def getPointsOfAnyTriplets(dice,number)
-	points = 0
-	if(dice.count(number) >= 3)
-		points += dice.inject(0) do |sum, die|
-			if die != 1
-				sum = die * 100 unless die
-			else
-				sum = 1000
-			end
-			dice.slice
-		end
+def getPointsOfAnyTriplets(dice,i)
+	sum = 0
+	localDice = dice
+	if i != 1
+		sum += i * 100 
+	else
+		sum += 1000
 	end
-	return points
-end
-
-def anyTriplets number
-	return	dice.count(number)
+	localDice.slice!(localDice.index(i),3)
+	puts localDice
+	dice = localDice
+	return sum
 end
 
 class AboutScoringProject < EdgeCase::Koan
