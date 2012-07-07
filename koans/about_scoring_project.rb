@@ -50,16 +50,19 @@ end
 
 def getPointsForSingles(dice,i)
 	sum = 0
-	localDice = dice
-	if(i == 5 && !localDice.index(i).nil?)
-		puts localDice
-		localDice.pop(localDice.index(i))
-		sum += 50
+	if (dice.index(i).nil?)
+		return sum
 	end
-	if(i == 1 && !localDice.index(i).nil?)
+	localDice = dice
+	if(i == 5)
 		puts localDice
-		localDice.pop(localDice.index(i))
-		sum += 100
+		localDice.slice(localDice.index(i), localDice.count(i))
+		sum += 50 * localDice.count(i)
+	end
+	if(i == 1)
+		puts localDice
+		localDice.slice(localDice.index(i), localDice.count(i))
+		sum += 100 * localDice.count(i)
 	end
 	dice = localDice
 	return sum
