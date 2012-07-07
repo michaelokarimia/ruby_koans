@@ -30,47 +30,42 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 # Your goal is to write the score method.
 
 def score(dice)
- runningTotal = 0
- runningTotal =+ loopThroughAllDiceNumbers(dice)
- return runningTotal
+ dice.sort!
+ return loopThroughAllDiceNumbers(dice)
 end
 
 def loopThroughAllDiceNumbers dice
 	sum = 0
-	dice.sort!
 	for i in 1..6 do
 		if(dice.count(i) >= 3)
-			sum += getPointsOfAnyTriplets(dice,i)
+			sum += calcTripletPoints(dice,i)
 		end
-	sum += getPointsForSingles(dice,i)
+	sum += calcPointsForSingleDie(dice,i)
 	end
 	return sum
 end
 
-def getPointsForSingles(dice,i)
+def calcPointsForSingleDie(dice,i)
 	sum = 0
 	if (dice.index(i).nil?)
 		return sum
 	end
-	localDice = dice
 	if(i == 1 || i == 5)
-		sum += i*10 * localDice.count(i) * (i == 1 ? 10 : 1)
+		sum += dice.count(i) * calcMultiplier(i)
 	end
-	localDice.slice(localDice.index(i), localDice.count(i))
-	dice = localDice
+	dice.slice(dice.index(i), dice.count(i))
 	return sum
 end	
-def getPointsOfAnyTriplets(dice,i)
+
+def calcTripletPoints(dice,i)
 	sum = 0
-	localDice = dice
-	if i != 1
-		sum += i * 100 
-	else
-		sum += 1000
-	end
-	localDice.slice!(localDice.index(i),3)
-	dice = localDice
+	sum += 10 * calcMultiplier(i)
+	dice.slice!(dice.index(i),3)
 	return sum
+end
+
+def calcMultiplier i
+	return 10 *  i *  (i == 1 ? 10 : 1)
 end
 
 class AboutScoringProject < EdgeCase::Koan
