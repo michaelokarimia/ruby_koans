@@ -42,7 +42,6 @@ def loopThroughAllDiceNumbers dice
 		if(dice.count(i) >= 3)
 			sum += getPointsOfAnyTriplets(dice,i)
 		end
-		puts dice
 	sum += getPointsForSingles(dice,i)
 	end
 	return sum
@@ -54,15 +53,9 @@ def getPointsForSingles(dice,i)
 		return sum
 	end
 	localDice = dice
-	if(i == 5)
-		puts localDice
+	if(i == 1 || i == 5)
+		sum += i*10 * localDice.count(i) * (i == 1 ? 10 : 1)
 		localDice.slice(localDice.index(i), localDice.count(i))
-		sum += 50 * localDice.count(i)
-	end
-	if(i == 1)
-		puts localDice
-		localDice.slice(localDice.index(i), localDice.count(i))
-		sum += 100 * localDice.count(i)
 	end
 	dice = localDice
 	return sum
@@ -76,7 +69,6 @@ def getPointsOfAnyTriplets(dice,i)
 		sum += 1000
 	end
 	localDice.slice!(localDice.index(i),3)
-	puts localDice
 	dice = localDice
 	return sum
 end
